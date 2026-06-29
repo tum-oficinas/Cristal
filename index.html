@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <title>TUM CRISTAL — Cotizador</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:#0B1322; --card:#121E36; --card-2:#16223E; --input:#1B2A47;
+      --border:#28395C; --border-soft:#1F2D4D;
+      --accent:#C9FF4D; --accent-dim:#8FCC1A;
+      --text:#EEF2FA; --text-soft:#9AABCB; --text-mute:#5E6F94;
+      --radius:14px;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    html,body{min-height:100vh;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;}
+    .page{max-width:520px;margin:0 auto;padding:28px 18px 60px;}
+
+    .tum-header{display:flex;align-items:flex-start;justify-content:space-between;padding:18px 0 20px;border-bottom:1px solid var(--border-soft);margin-bottom:24px;}
+    .tum-brand-tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:2px 10px;border-radius:20px;display:inline-block;margin-bottom:7px;}
+    .tum-brand-title{font-family:'Space Grotesk',sans-serif;font-size:24px;font-weight:700;letter-spacing:-0.02em;color:var(--text);}
+    .tum-brand-title span{color:var(--accent);}
+    .tum-brand-sub{font-size:11px;color:var(--text-mute);margin-top:3px;letter-spacing:.04em;}
+
+    .section{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--radius);padding:20px 18px;margin-bottom:14px;}
+    .eyebrow{display:flex;align-items:center;gap:9px;margin-bottom:16px;}
+    .eyebrow .num{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--bg);background:var(--accent);width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .eyebrow .lbl{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);font-weight:600;}
+
+    .dim-field{display:flex;align-items:stretch;border:1px solid var(--border);border-radius:9px;background:var(--input);overflow:hidden;transition:border-color .15s,box-shadow .15s;}
+    .dim-field:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(201,255,77,0.15);}
+    .dim-field input{flex:1;height:54px;background:transparent;border:none;outline:none;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;padding:0 1.25rem;}
+    .dim-field input::placeholder{color:var(--text-mute);font-size:20px;}
+    .dim-field input::-webkit-inner-spin-button,.dim-field input::-webkit-outer-spin-button{-webkit-appearance:none;}
+    .dim-unit{display:flex;align-items:center;padding:0 1.25rem;border-left:1px solid var(--border-soft);font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--text-mute);letter-spacing:1px;user-select:none;}
+
+    .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+    .plan{background:var(--card-2);border:1px solid var(--border-soft);border-radius:12px;padding:16px 14px;cursor:pointer;transition:border-color .15s,background .15s;text-align:left;user-select:none;}
+    .plan:hover{border-color:var(--border);}
+    .plan.selected{border-color:var(--accent);background:rgba(201,255,77,0.06);}
+    .plan-num{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:var(--text-mute);margin-bottom:10px;letter-spacing:.06em;}
+    .plan.selected .plan-num{color:var(--accent-dim);}
+    .plan-name{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text-soft);margin-bottom:12px;}
+    .plan.selected .plan-name{color:var(--text);}
+    .plan-price{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--text-mute);min-height:18px;transition:color .15s;}
+    .plan-price.has-val{color:var(--accent);}
+
+    .result{display:none;border:1.5px solid var(--accent);border-radius:var(--radius);background:linear-gradient(180deg,rgba(201,255,77,0.09),rgba(201,255,77,0.02));overflow:hidden;margin-bottom:14px;}
+    .result.visible{display:block;}
+    .result-top{padding:16px 18px;border-bottom:1px solid var(--border-soft);display:flex;justify-content:space-between;align-items:flex-start;}
+    .result-top-label{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);margin-bottom:3px;}
+    .result-top-title{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;color:var(--text);}
+    .result-tag{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bg);background:var(--accent);padding:3px 10px;border-radius:20px;flex-shrink:0;}
+    .result-rows{padding:16px 18px;display:flex;flex-direction:column;gap:10px;}
+    .result-row{display:flex;justify-content:space-between;align-items:baseline;}
+    .result-row .rk{font-size:12px;color:var(--text-mute);}
+    .result-row .rv{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--text-soft);}
+    .result-total{padding:14px 18px;border-top:1.5px dashed rgba(201,255,77,0.35);display:flex;justify-content:space-between;align-items:baseline;}
+    .result-total .tk{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text);}
+    .result-total .tv{font-family:'JetBrains Mono',monospace;font-size:32px;font-weight:700;color:var(--accent);line-height:1;}
+    .result-total .tv span{font-size:16px;margin-left:3px;color:var(--accent-dim);}
+
+    .hint{text-align:center;padding:2rem 0;font-size:12px;color:var(--text-mute);letter-spacing:.04em;display:block;}
+    .hint.hidden{display:none;}
+
+    .actions{display:none;gap:10px;margin-bottom:14px;flex-wrap:wrap;}
+    .actions.visible{display:flex;}
+    .btn{flex:1;min-height:46px;border-radius:10px;font-family:'Inter',sans-serif;font-size:13px;font-weight:600;cursor:pointer;border:1px solid transparent;transition:transform .1s,opacity .15s;padding:12px 16px;}
+    .btn:active{transform:scale(0.98);}
+    .btn-wa{flex:1.6;background:#1FAA56;color:#fff;border-color:#1FAA56;}
+    .btn-wa:hover{opacity:.92;}
+    .btn-ghost{background:var(--card-2);color:var(--text);border-color:var(--border);}
+    .btn-ghost:hover{border-color:var(--text-soft);}
+
+    .toast{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%) translateY(16px);background:var(--text);color:var(--bg);font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px 22px;border-radius:20px;opacity:0;transition:opacity .18s,transform .18s;pointer-events:none;z-index:999;white-space:nowrap;}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+    .footer{text-align:center;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--text-mute);margin-top:3rem;padding-top:2rem;border-top:1px solid var(--border-soft);}
+
+    @media(max-width:400px){
+      .plans{gap:7px;}
+      .plan{padding:14px 10px;}
+      .plan-name{font-size:12px;}
+      .actions.visible{flex-direction:column;}
+      .btn{flex:unset;width:100%;}
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+  <div class="tum-header">
+    <div>
+      <div class="tum-brand-tag">TUM CRISTAL</div>
+      <div class="tum-brand-title">Cotizador de <span>servicios</span></div>
+      <div class="tum-brand-sub">Limpieza profesional de cristales</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow"><span class="num">1</span><span class="lbl">Dimensión del área</span></div>
+    <div class="dim-field">
+      <input type="number" id="dimInput" placeholder="0" min="0" step="any" inputmode="decimal" />
+      <div class="dim-unit">M²</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow"><span class="num">2</span><span class="lbl">Plan de servicio</span></div>
+    <div class="plans">
+      <div class="plan" data-plan="inicial" onclick="selectPlan(this)">
+        <div class="plan-num">01</div>
+        <div class="plan-name">Inicial</div>
+        <div class="plan-price" id="price-inicial"></div>
+      </div>
+      <div class="plan" data-plan="mantenimiento" onclick="selectPlan(this)">
+        <div class="plan-num">02</div>
+        <div class="plan-name">Manteni&shy;miento</div>
+        <div class="plan-price" id="price-mantenimiento"></div>
+      </div>
+      <div class="plan" data-plan="critico" onclick="selectPlan(this)">
+        <div class="plan-num">03</div>
+        <div class="plan-name">Crítico</div>
+        <div class="plan-price" id="price-critico"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result" id="resultCard">
+    <div class="result-top">
+      <div>
+        <div class="result-top-label">Cotización</div>
+        <div class="result-top-title">TUM CRISTAL — Presupuesto</div>
+      </div>
+      <div class="result-tag" id="resBadge">—</div>
+    </div>
+    <div class="result-rows">
+      <div class="result-row"><span class="rk">Dimensión</span><span class="rv" id="resDim">—</span></div>
+      <div class="result-row"><span class="rk">Plan</span><span class="rv" id="resPlan">—</span></div>
+    </div>
+    <div class="result-total">
+      <span class="tk">Total estimado</span>
+      <span class="tv" id="resTotal">—</span>
+    </div>
+  </div>
+
+  <div class="hint" id="hint">Ingrese la dimensión y seleccione un plan</div>
+
+  <div class="actions" id="actionsRow">
+    <button class="btn btn-wa" onclick="compartirWA()">Compartir por WhatsApp</button>
+    <button class="btn btn-ghost" onclick="copiarCot()">Copiar</button>
+    <button class="btn btn-ghost" onclick="limpiar()">Nueva</button>
+  </div>
+
+  <div class="footer">TUM CRISTAL &copy; 2026</div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  const PLANS = {
+    inicial:       { label: 'Inicial',       mult: 15 },
+    mantenimiento: { label: 'Mantenimiento',  mult: 20 },
+    critico:       { label: 'Critico',        mult: 30 }
+  };
+  let selectedPlan = null, dimension = 0;
+
+  document.getElementById('dimInput').addEventListener('input', function() {
+    dimension = parseFloat(this.value) || 0;
+    updatePrices(); updateResult();
+  });
+
+  function fmt(n) {
+    return 'Bs ' + n.toLocaleString('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+
+  function updatePrices() {
+    Object.entries(PLANS).forEach(function([key, plan]) {
+      var el = document.getElementById('price-' + key);
+      if (dimension > 0) {
+        el.textContent = fmt(dimension * plan.mult);
+        el.classList.add('has-val');
+      } else {
+        el.textContent = '';
+        el.classList.remove('has-val');
+      }
+    });
+  }
+
+  function selectPlan(card) {
+    document.querySelectorAll('.plan').forEach(function(c) { c.classList.remove('selected'); });
+    card.classList.add('selected');
+    selectedPlan = card.dataset.plan;
+    updateResult();
+  }
+
+  function updateResult() {
+    var rc = document.getElementById('resultCard');
+    var hint = document.getElementById('hint');
+    var acts = document.getElementById('actionsRow');
+    if (dimension > 0 && selectedPlan) {
+      var plan = PLANS[selectedPlan];
+      var total = dimension * plan.mult;
+      var formatted = fmt(total);
+      var numStr = formatted.replace('Bs ', '');
+      var dotIdx = numStr.indexOf(',');
+      var intPart, decPart;
+      if (dotIdx >= 0) { intPart = 'Bs ' + numStr.slice(0, dotIdx); decPart = numStr.slice(dotIdx); }
+      else { intPart = 'Bs ' + numStr; decPart = ''; }
+      document.getElementById('resBadge').textContent = plan.label;
+      document.getElementById('resDim').textContent = dimension.toLocaleString('es-BO') + ' m\u00B2';
+      document.getElementById('resPlan').textContent = plan.label;
+      document.getElementById('resTotal').innerHTML = intPart + (decPart ? '<span>' + decPart + '</span>' : '');
+      rc.classList.add('visible'); hint.classList.add('hidden'); acts.classList.add('visible');
+    } else {
+      rc.classList.remove('visible'); hint.classList.remove('hidden'); acts.classList.remove('visible');
+    }
+  }
+
+  function textoWA() {
+    var plan = PLANS[selectedPlan];
+    var total = dimension * plan.mult;
+    return (
+      '\uD83E\uDDF4 *TUM CRISTAL \u2014 Cotizaci\u00F3n*\n' +
+      '\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\n' +
+      'Plan: ' + plan.label + '\n' +
+      'Dimensi\u00F3n: ' + dimension.toLocaleString('es-BO') + ' m\u00B2\n' +
+      '\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\n' +
+      '*Total: ' + fmt(total) + '*\n' +
+      '\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\u2504\n' +
+      'Limpieza profesional de cristales\n' +
+      '_Tu jornada sigue. TUM se encarga._'
+    );
+  }
+
+  function compartirWA() {
+    if (!selectedPlan || dimension <= 0) { showToast('Complete la cotizaci\u00F3n'); return; }
+    window.open('https://wa.me/?text=' + encodeURIComponent(textoWA()), '_blank');
+  }
+
+  function copiarCot() {
+    if (!selectedPlan || dimension <= 0) { showToast('Complete la cotizaci\u00F3n'); return; }
+    var texto = textoWA().replace(/\*/g, '').replace(/_/g, '');
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(texto).then(function() { showToast('Cotizaci\u00F3n copiada'); }).catch(function() { fbCopy(texto); });
+    } else { fbCopy(texto); }
+  }
+
+  function fbCopy(txt) {
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); showToast('Cotizaci\u00F3n copiada'); } catch(e) { showToast('No se pudo copiar'); }
+    document.body.removeChild(ta);
+  }
+
+  function limpiar() {
+    document.getElementById('dimInput').value = '';
+    dimension = 0; selectedPlan = null;
+    document.querySelectorAll('.plan').forEach(function(c) { c.classList.remove('selected'); });
+    updatePrices(); updateResult();
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2200);
+  }
+</script>
+</body>
+</html>
