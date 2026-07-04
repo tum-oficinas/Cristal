@@ -1,5 +1,9 @@
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0B1322">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
@@ -22,7 +26,8 @@
     --danger:#FF7A7A;
     --radius:14px;
   }
-  *{box-sizing:border-box;}
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
   @media (prefers-reduced-motion: reduce){ *{transition:none!important; animation:none!important;} }
 
   .tum-app{
@@ -30,6 +35,8 @@
     color:var(--text);
     font-family:'Inter',system-ui,sans-serif;
     padding:28px 18px 60px;
+    padding-left:max(18px, env(safe-area-inset-left));
+    padding-right:max(18px, env(safe-area-inset-right));
     min-height:100vh;
     line-height:1.45;
   }
@@ -146,7 +153,7 @@
   .tum-option-title{display:flex;flex-direction:column;gap:2px;}
   .tum-option-name{font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:700;color:var(--text);}
   .tum-option-tag{font-size:11px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-mute);font-weight:600;}
-  .tum-radio{display:flex;align-items:center;gap:7px;cursor:pointer;}
+  .tum-radio{display:flex;align-items:center;gap:7px;cursor:pointer;padding:8px 4px;margin:-8px -4px;}
   .tum-radio input{position:absolute;opacity:0;width:0;height:0;}
   .tum-radio-dot{
     width:17px;height:17px;border-radius:50%;border:1.5px solid var(--border);
@@ -171,7 +178,7 @@
   .tum-extra-row input[type=text]{flex:2;}
   .tum-extra-row input[type=number]{flex:1;}
   .tum-extra-del{
-    width:34px;height:34px;flex-shrink:0;border-radius:8px;border:1px solid var(--border);
+    width:38px;height:38px;flex-shrink:0;border-radius:8px;border:1px solid var(--border);
     background:var(--input);color:var(--danger);cursor:pointer;font-size:15px;
     display:flex;align-items:center;justify-content:center;
   }
@@ -218,6 +225,28 @@
   .tum-btn-wa{background:#1FAA56;color:#fff;flex:1 1 160px;}
   .tum-btn-wa:hover{opacity:.92;}
 
+  /* Barra de acciones fija (solo móvil) */
+  .tum-mobile-bar{
+    display:none;
+    position:fixed;left:0;right:0;bottom:0;z-index:40;
+    background:rgba(11,19,34,0.92);backdrop-filter:blur(10px);
+    border-top:1px solid var(--border-soft);
+    padding:8px 10px calc(8px + env(safe-area-inset-bottom));
+  }
+  .tum-mobile-bar-status{font-size:11.5px;text-align:center;color:var(--text-soft);min-height:14px;margin-bottom:4px;}
+  .tum-mobile-bar-status.ok{color:var(--accent);}
+  .tum-mobile-bar-status.err{color:var(--danger);}
+  .tum-mobile-bar-row{display:flex;gap:8px;}
+  .tum-mbtn{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    border-radius:10px;padding:8px 4px;font-size:10.5px;font-weight:700;border:1px solid var(--border);
+    background:var(--card-2);color:var(--text);font-family:'Inter',sans-serif;min-height:48px;
+  }
+  .tum-mbtn span{font-size:10.5px;}
+  .tum-mbtn:active{transform:scale(0.97);}
+  .tum-mbtn-primary{background:var(--accent);color:var(--bg);border-color:var(--accent);}
+  .tum-mbtn-wa{background:#1FAA56;color:#fff;border-color:#1FAA56;}
+
   /* Saved visits */
   .tum-divider{display:flex;align-items:center;gap:10px;margin:34px 0 16px;}
   .tum-divider span{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--text-soft);font-weight:600;white-space:nowrap;}
@@ -236,18 +265,19 @@
   .tum-badge{font-size:10px;padding:3px 8px;border-radius:20px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;}
   .tum-badge-presupuesto{background:rgba(255,200,77,0.15);color:#FFC84D;}
   .tum-badge-diagnostico{background:rgba(120,170,255,0.15);color:#78AAFF;}
-  .tum-visit-del{background:none;border:none;color:var(--text-mute);font-size:16px;cursor:pointer;padding:4px;}
+  .tum-visit-del{background:none;border:none;color:var(--text-mute);font-size:17px;cursor:pointer;padding:8px;min-width:38px;min-height:38px;display:flex;align-items:center;justify-content:center;border-radius:8px;}
+  .tum-visit-del:active{background:rgba(255,122,122,0.12);}
   .tum-visit-del:hover{color:var(--danger);}
   .tum-empty{color:var(--text-mute);font-size:13px;text-align:center;padding:24px 10px;}
   .tum-status-msg{font-size:12.5px;text-align:center;color:var(--text-soft);min-height:18px;margin-top:-6px;margin-bottom:14px;}
   .tum-status-msg.ok{color:var(--accent);}
   .tum-status-msg.err{color:var(--danger);}
 
-  @media (max-width:480px){
+  @media (max-width:540px){
     .tum-app{padding:16px 14px 52px;}
     .tum-section{padding:16px 14px;}
     .tum-ticket-amount{font-size:30px;}
-    .tum-btn{padding:14px 16px;font-size:15px;}
+    .tum-btn{padding:14px 16px;font-size:16px;min-height:48px;}
     .tum-actions{flex-direction:column;gap:10px;}
     .tum-actions .tum-btn{flex:unset;width:100%;}
     .tum-field input[type=text],
@@ -255,12 +285,16 @@
     .tum-field input[type=number],
     .tum-field input[type=date],
     .tum-field select,
-    .tum-field textarea{padding:12px 14px;font-size:15px;}
+    .tum-field textarea{padding:12px 14px;font-size:16px;min-height:44px;}
+    .tum-field textarea{min-height:80px;}
     .tum-row{flex-direction:column;gap:0;}
     .tum-row .tum-field{flex:unset;width:100%;}
     .tum-pagehead h1{font-size:22px;}
-    .tum-extra-del{width:40px;height:40px;}
+    .tum-extra-del{width:42px;height:42px;}
     .tum-option-block{padding:14px 12px;}
+    .tum-app{padding-bottom:96px;}
+    .tum-actions{display:none;}
+    .tum-mobile-bar{display:block;}
   }
 </style>
 
@@ -513,6 +547,15 @@
       <button class="tum-btn tum-btn-ghost" id="btn-nueva" type="button">Nueva visita</button>
     </div>
     <div class="tum-status-msg" id="status-msg"></div>
+
+    <div class="tum-mobile-bar" id="tum-mobile-bar">
+      <div class="tum-mobile-bar-status" id="status-msg-m"></div>
+      <div class="tum-mobile-bar-row">
+        <button class="tum-mbtn tum-mbtn-primary" id="btn-guardar-m" type="button">📸<span>Guardar</span></button>
+        <button class="tum-mbtn" id="btn-pdf-m" type="button" style="background:#0F172A;color:#C9FF4D;border:1px solid #C9FF4D;">📄<span>PDF</span></button>
+        <button class="tum-mbtn tum-mbtn-wa" id="btn-whatsapp-m" type="button">💬<span>WhatsApp</span></button>
+      </div>
+    </div>
 
     <!-- SAVED VISITS -->
     <div class="tum-divider"><span>Visitas guardadas</span></div>
@@ -850,6 +893,11 @@
     const el = $('status-msg');
     el.textContent = msg;
     el.className = 'tum-status-msg' + (type ? ' '+type : '');
+    const elm = $('status-msg-m');
+    if(elm){
+      elm.textContent = msg;
+      elm.className = 'tum-mobile-bar-status' + (type ? ' '+type : '');
+    }
   }
 
   async function loadAllVisits(){
@@ -1197,13 +1245,13 @@
     return doc.output('blob');
   }
 
-  $('btn-guardar').addEventListener('click', async () => {
+  async function accionGuardar(){
     if(!fields.nombre.value.trim()){
       showStatus('Agrega el nombre del cliente antes de guardar.', 'err');
       return;
     }
-    const btn = $('btn-guardar');
-    btn.disabled = true;
+    const btns = [$('btn-guardar'), $('btn-guardar-m')].filter(Boolean);
+    btns.forEach(b => b.disabled = true);
     showStatus('Guardando...', '');
     const visit = collectVisit();
     currentId = visit.id;
@@ -1213,7 +1261,7 @@
     const ok = await saveAllVisits(all);
     if(!ok){
       showStatus('No se pudo guardar. Intenta de nuevo.', 'err');
-      btn.disabled = false;
+      btns.forEach(b => b.disabled = false);
       return;
     }
     renderVisitsList($('f-buscar').value);
@@ -1226,16 +1274,18 @@
     }catch(err){
       showStatus('Visita guardada, pero no se pudo generar la imagen.', 'err');
     }
-    btn.disabled = false;
-  });
+    btns.forEach(b => b.disabled = false);
+  }
+  $('btn-guardar').addEventListener('click', accionGuardar);
+  $('btn-guardar-m').addEventListener('click', accionGuardar);
 
-  $('btn-pdf').addEventListener('click', async () => {
+  async function accionPDF(){
     if(!fields.nombre.value.trim()){
       showStatus('Agrega el nombre del cliente antes de generar el PDF.', 'err');
       return;
     }
-    const btnPdf = $('btn-pdf');
-    btnPdf.disabled = true;
+    const btns = [$('btn-pdf'), $('btn-pdf-m')].filter(Boolean);
+    btns.forEach(b => b.disabled = true);
     showStatus('Generando PDF con formato TUM Cristal...', '');
     try{
       const visit = collectVisit();
@@ -1246,8 +1296,10 @@
     }catch(err){
       showStatus('No se pudo generar el PDF. Intenta de nuevo.', 'err');
     }
-    btnPdf.disabled = false;
-  });
+    btns.forEach(b => b.disabled = false);
+  }
+  $('btn-pdf').addEventListener('click', accionPDF);
+  $('btn-pdf-m').addEventListener('click', accionPDF);
 
   function limpiarNumeroWA(raw){
     let n = (raw || '').replace(/[^\d+]/g, '');
@@ -1259,7 +1311,7 @@
     return n;
   }
 
-  $('btn-whatsapp').addEventListener('click', () => {
+  function accionWhatsApp(){
     const v = collectVisit();
     const linea = '┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄';
     const extrasTxt = v.extras.filter(e=>e.name).map(e => `▸ ${e.name} — Bs ${num(e.price)}`).join('\n');
@@ -1309,7 +1361,9 @@
       return;
     }
     window.open('https://wa.me/' + numeroWA + '?text=' + encodeURIComponent(msg), '_blank');
-  });
+  }
+  $('btn-whatsapp').addEventListener('click', accionWhatsApp);
+  $('btn-whatsapp-m').addEventListener('click', accionWhatsApp);
 
   // ---------- init ----------
   addExtraRow();
