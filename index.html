@@ -589,7 +589,7 @@
   fields.fecha.value = new Date().toISOString().slice(0,10);
 
   // ---------- factores TUM CRISTAL ----------
-  const FACTORES = { inicial: 20, mantenimiento: 25, critico: 30 };
+  const FACTORES = { inicial: 20, mantenimiento: 25, critico: 35 };
   const NOMBRES = { inicial: 'Inicial', mantenimiento: 'Mantenimiento', critico: 'Crítico' };
 
   function num(v){ const n = parseFloat(v); return isNaN(n) ? 0 : n; }
@@ -685,6 +685,7 @@
       const tag = e.target.tagName;
       if(tag === 'INPUT' || tag === 'SELECT' || tag === 'OPTION' || tag === 'TEXTAREA') return;
       if(e.target.closest('.tum-radio')) return;
+      e.preventDefault();
       setPlanElegidoOpcion(opt);
     });
   });
