@@ -393,23 +393,32 @@
     /* ── Bloque de contacto de la empresa (queda en capturas de pantalla) ── */
     .result-contact {
       border-top: 0.5px solid var(--border);
-      padding: 0.85rem 1.25rem 1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      background: var(--surface-2);
-    }
-    .result-contact-row {
+      padding: 0.9rem 1.25rem 1rem;
       display: flex;
       align-items: center;
-      gap: 7px;
-      font-size: 12.5px;
+      justify-content: space-between;
+      gap: 10px;
+      background: var(--surface-2);
+    }
+    .result-contact-signature {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
       color: var(--text-secondary);
     }
-    .result-contact-row svg { width: 15px; height: 15px; color: var(--accent-text); flex-shrink: 0; }
-    .result-contact-row.rc-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
-    .result-contact-row a { color: var(--accent-text); text-decoration: none; font-weight: 500; }
-    .result-contact-row a:hover { text-decoration: underline; }
+    .result-contact-signature span { color: var(--text-tertiary, #9ca3af); font-weight: 400; }
+    .result-contact-cta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--accent-text);
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .result-contact-cta svg { width: 15px; height: 15px; flex-shrink: 0; }
+    .result-contact-cta:hover { text-decoration: underline; }
 
     /* ── Actions ── */
     .actions { display: flex; gap: 8px; margin-bottom: 1rem; }
@@ -863,16 +872,10 @@
         <span class="tv" id="resTotal">—</span>
       </div>
       <div class="result-contact">
-        <div class="result-contact-row rc-name">
-          <svg class="icon"><use href="#i-shield-check"></use></svg> TUM Cristales
-        </div>
-        <div class="result-contact-row">
-          <svg class="icon"><use href="#i-whatsapp"></use></svg>
-          <a href="https://wa.me/59174959697" target="_blank" rel="noopener">+591 74959697 (WhatsApp)</a>
-        </div>
-        <div class="result-contact-row">
-          <svg class="icon"><use href="#i-map-pin"></use></svg> Santa Cruz de la Sierra, Bolivia
-        </div>
+        <div class="result-contact-signature">TUM Cristales <span>· Santa Cruz de la Sierra</span></div>
+        <a class="result-contact-cta" href="https://wa.me/59174959697" target="_blank" rel="noopener">
+          <svg class="icon"><use href="#i-whatsapp"></use></svg> +591 74959697
+        </a>
       </div>
     </div>
 
@@ -1068,27 +1071,29 @@
       const dim   = effectiveDimension();
       const total = dim * plan.mult;
       const dimLine = bothSides
-        ? '📐 Dimensión: ' + dimension.toLocaleString('es-BO') + ' m² × 2 (ambos lados) = ' + dim.toLocaleString('es-BO') + ' m²\n'
-        : '📐 Dimensión: ' + dimension.toLocaleString('es-BO') + ' m²\n';
+        ? dimension.toLocaleString('es-BO') + ' m² (ambos lados = ' + dim.toLocaleString('es-BO') + ' m²)'
+        : dimension.toLocaleString('es-BO') + ' m²';
+
       let texto = (
-        '🔷 *TUM CRISTAL — Cotización*\n' +
-        '──────────────────────\n' +
-        '📋 Plan: ' + plan.label + '\n' +
-        dimLine +
-        '──────────────────────\n' +
-        '💰 *Total: ' + fmt(total) + '*\n' +
-        '──────────────────────\n' +
-        '⚠️ ' + plan.alertTitle + '. ' + plan.alertText + '\n' +
-        '──────────────────────\n'
+        'TUM CRISTALES\n' +
+        'Cotización de servicio\n' +
+        '\n' +
+        'Plan: ' + plan.label + '\n' +
+        'Dimensión: ' + dimLine + '\n' +
+        '\n' +
+        'Total estimado: ' + fmt(total) + '\n' +
+        '\n' +
+        'Nota: ' + plan.alertTitle + '. ' + plan.alertText + '\n' +
+        '\n' +
+        'Santa Cruz de la Sierra, Bolivia\n' +
+        'WhatsApp: +591 74959697'
       );
-      texto += '📍 TUM Cristales — Santa Cruz de la Sierra, Bolivia\n';
-      texto += '📞 WhatsApp: +591 74959697';
       return texto;
     }
 
     function copiarCot() {
       if (!selectedPlan || dimension <= 0) { showToast('Completa la cotización primero'); return; }
-      const texto = textoPlano().replace(/\*/g, '');
+      const texto = textoPlano();
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(texto)
           .then(() => showToast('¡Cotización copiada!'))
