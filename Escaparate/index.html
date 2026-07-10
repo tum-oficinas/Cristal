@@ -372,6 +372,27 @@
     .result-total-row .tl { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
     .result-total-row .tv { font-size: 26px; font-weight: 700; color: var(--accent); }
 
+    /* ── Bloque de contacto de la empresa (queda en capturas de pantalla) ── */
+    .result-contact {
+      border-top: 0.5px solid var(--border);
+      padding: 0.85rem 1.25rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: var(--surface-2);
+    }
+    .result-contact-row {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12.5px;
+      color: var(--text-secondary);
+    }
+    .result-contact-row svg { width: 15px; height: 15px; color: var(--accent); flex-shrink: 0; }
+    .result-contact-row.rc-name { font-size: 13.5px; font-weight: 600; color: var(--text-primary); }
+    .result-contact-row a { color: var(--accent-text); text-decoration: none; font-weight: 500; }
+    .result-contact-row a:hover { text-decoration: underline; }
+
     /* ── Actions ── */
     .actions { display: flex; gap: 8px; margin-bottom: 1rem; }
     .btn {
@@ -693,6 +714,14 @@
         <line x1="12" y1="11" x2="12" y2="16"/>
         <line x1="12" y1="8" x2="12" y2="8.01"/>
       </symbol>
+      <symbol id="i-whatsapp" viewBox="0 0 24 24">
+        <path d="M12 3a9 9 0 0 0-7.5 14l-1 3.5 3.6-1A9 9 0 1 0 12 3z"/>
+        <path d="M8.3 8.6c.2-.4.4-.4.6-.4h.4c.2 0 .3 0 .5.4.2.4.6 1.4.6 1.5.1.1.1.2 0 .3-.5.9-1 .9-.7 1.4.7 1.2 1.3 1.7 2.4 2.2.2.1.3.1.4-.1.2-.2.5-.6.7-.8.1-.2.3-.2.5-.1.2.1 1.2.6 1.4.7.2.1.3.1.3.2 0 .2 0 .8-.3 1.3-.3.5-1.5 1-2.1 1-.6 0-1.3-.1-2.9-1.2-2.3-1.7-3.5-3.9-3.6-4.3-.1-.4-.7-1.1-.7-2.1 0-1 .5-1.5.7-1.7z" stroke-width="1.4"/>
+      </symbol>
+      <symbol id="i-map-pin" viewBox="0 0 24 24">
+        <path d="M12 21s7-6.5 7-11.5A7 7 0 0 0 5 9.5C5 14.5 12 21 12 21z"/>
+        <circle cx="12" cy="9.5" r="2.3"/>
+      </symbol>
     </defs>
   </svg>
   <div class="wrap">
@@ -796,6 +825,18 @@
       <div class="result-total-row">
         <span class="tl">Total estimado</span>
         <span class="tv" id="resTotal">—</span>
+      </div>
+      <div class="result-contact">
+        <div class="result-contact-row rc-name">
+          <svg class="icon"><use href="#i-shield-check"></use></svg> TUM Cristales
+        </div>
+        <div class="result-contact-row">
+          <svg class="icon"><use href="#i-whatsapp"></use></svg>
+          <a href="https://wa.me/59174959697" target="_blank" rel="noopener">+591 74959697 (WhatsApp)</a>
+        </div>
+        <div class="result-contact-row">
+          <svg class="icon"><use href="#i-map-pin"></use></svg> Santa Cruz de la Sierra, Bolivia
+        </div>
       </div>
     </div>
 
@@ -988,7 +1029,8 @@
         '⚠️ ' + plan.alertTitle + '. ' + plan.alertText + '\n' +
         '──────────────────────\n'
       );
-      texto += 'Servicio de limpieza de cristales TUM CRISTAL';
+      texto += '📍 TUM Cristales — Santa Cruz de la Sierra, Bolivia\n';
+      texto += '📞 WhatsApp: +591 74959697';
       return texto;
     }
 
