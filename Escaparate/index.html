@@ -836,7 +836,7 @@
         <div class="plan-card" data-plan="critico" data-mult="35" onclick="selectPlan(this)">
           <div class="check-dot"><svg class="icon"><use href="#i-check"></use></svg></div>
           <div class="plan-icon"><svg class="icon"><use href="#i-shield-alert"></use></svg></div>
-          <div class="plan-name">Crítico</div>
+          <div class="plan-name">Intensivo</div>
           <div class="plan-price" id="price-critico">—</div>
         </div>
 
@@ -932,22 +932,22 @@
   <script>
     const PLANS = {
       inicial:       {
-        label: 'Inicial', mult: 20, icon: 'ti-seedling',
+        label: 'Primera limpieza', mult: 20, icon: 'ti-seedling',
         alertIcon: 'i-alert-triangle',
-        alertTitle: 'Tarifa promocional de única vez',
-        alertText: 'Válida por una sola vez por cliente o negocio. No aplica en visitas o cotizaciones posteriores.'
+        alertTitle: 'Primera limpieza',
+        alertText: 'Pensada para conocer nuestro servicio antes de definir un plan continuo. Tarifa promocional, válida una sola vez por cliente.'
       },
       mantenimiento: {
-        label: 'Mantenimiento', mult: 25, icon: 'ti-tool',
+        label: 'Servicio periódico', mult: 25, icon: 'ti-tool',
         alertIcon: 'i-calendar-check',
-        alertTitle: 'Tarifa de contrato o suscripción mensual',
-        alertText: 'Esta tarifa aplica únicamente bajo contrato o suscripción mensual del servicio.'
+        alertTitle: 'Servicio periódico',
+        alertText: 'Para negocios que conservan su escaparate impecable mediante visitas programadas. Tarifa vigente bajo contrato o suscripción mensual.'
       },
       critico:       {
-        label: 'Crítico', mult: 35, icon: 'ti-shield-check',
+        label: 'Intensivo', mult: 35, icon: 'ti-shield-check',
         alertIcon: 'i-alert-octagon',
-        alertTitle: 'Tarifa recomendada para limpieza crítica',
-        alertText: 'Recomendada para clientes que no realizan mantenimientos ni limpiezas regulares.'
+        alertTitle: 'Limpieza sin mantenimiento previo',
+        alertText: 'Para escaparates que no cuentan con una rutina periódica. Requiere mayor tiempo de trabajo por la suciedad acumulada.'
       }
     };
 
