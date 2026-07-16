@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>TUM CRISTAL — Cotizador</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -548,10 +549,25 @@
     }
     .btn:hover { background: var(--surface-2); }
     .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.55; pointer-events: none; }
     .btn svg { width: 16px; height: 16px; }
 
     .btn-copy { flex: 1; }
+    .btn-capture { flex: 0.9; }
     .btn-new { flex: 0.7; }
+
+    /* Botón único y grande de "Guardar mi presupuesto" en la vista del cliente */
+    .btn-capture.btn-capture-client {
+      flex: 1 1 100%;
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--accent-ink);
+      font-size: 15px;
+      font-weight: 700;
+      padding: 15px 10px;
+    }
+    .btn-capture.btn-capture-client:hover { background: var(--accent-hover); }
+    .btn-capture.btn-capture-client svg { width: 18px; height: 18px; }
 
     /* ── Toast ── */
     .toast {
@@ -596,6 +612,7 @@
       .plan-name { font-size: 11px; }
       .plan-price { font-size: 16px; padding: 4px 4px; }
       .actions { flex-wrap: wrap; }
+      .actions .btn { flex: 1 1 calc(50% - 4px); }
     }
     /* ── Botón compartir (3 acciones) ── */
     .btn-share { flex: 0.9; }
@@ -851,6 +868,10 @@
         <line x1="18" y1="18" x2="21" y2="18"/>
         <line x1="18" y1="21" x2="21" y2="21"/>
       </symbol>
+      <symbol id="i-camera" viewBox="0 0 24 24">
+        <path d="M4 8h3l1.5-2h7L17 8h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2z"/>
+        <circle cx="12" cy="14" r="3.5"/>
+      </symbol>
       <symbol id="i-download" viewBox="0 0 24 24">
         <path d="M12 3v13"/>
         <polyline points="7 11 12 16 17 11"/>
@@ -1015,6 +1036,9 @@
       </button>
       <button class="btn btn-share" id="btnQR" onclick="generarQR()">
         <svg class="icon"><use href="#i-qr"></use></svg> QR cliente
+      </button>
+      <button class="btn btn-capture" id="btnCapture" onclick="capturarCotizacion()">
+        <svg class="icon"><use href="#i-camera"></use></svg> Captura
       </button>
       <button class="btn btn-new" onclick="limpiar()">
         <svg class="icon"><use href="#i-refresh"></use></svg> Nueva
@@ -1363,6 +1387,55 @@
       return url.toString();
     }
 
+    /* ══════════ Captura de pantalla de la cotización (Android/iOS) ══════════ */
+
+    function capturarCotizacion() {
+      if (!selectedPlan || dimension <= 0) { showToast('Completa la cotización primero'); return; }
+      if (typeof html2canvas === 'undefined') { showToast('No se pudo cargar la herramienta de captura'); return; }
+
+      const btn = document.getElementById('btnCapture');
+      if (btn) btn.disabled = true;
+      showToast('Generando imagen…');
+
+      const target = document.getElementById('resultCard');
+
+      html2canvas(target, {
+        backgroundColor: '#ffffff',
+        scale: 2,
+        useCORS: true
+      }).then(canvas => {
+        canvas.toBlob(async (blob) => {
+          if (btn) btn.disabled = false;
+          if (!blob) { showToast('No se pudo generar la imagen'); return; }
+
+          const fileName = 'cotizacion-tumcristal-' + Date.now() + '.png';
+          const file = new File([blob], fileName, { type: 'image/png' });
+
+          if (navigator.canShare && navigator.canShare({ files: [file] })) {
+            try {
+              await navigator.share({ files: [file], title: 'Cotización TUM CRISTAL' });
+              return;
+            } catch (e) {
+              // El usuario canceló el panel de compartir; seguimos con la descarga.
+            }
+          }
+
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement('a');
+          link.href = url;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          setTimeout(() => URL.revokeObjectURL(url), 3000);
+          showToast('Imagen guardada');
+        }, 'image/png');
+      }).catch(() => {
+        if (btn) btn.disabled = false;
+        showToast('No se pudo generar la captura');
+      });
+    }
+
     function generarQR() {
       if (!selectedPlan || dimension <= 0) { showToast('Completa la cotización primero'); return; }
 
@@ -1462,6 +1535,16 @@
 
       const nuevaBtn = document.querySelector('.btn-new');
       if (nuevaBtn) nuevaBtn.style.display = 'none';
+
+      const copyBtn = document.querySelector('.btn-copy');
+      if (copyBtn) copyBtn.style.display = 'none';
+
+      // El cliente solo necesita un botón grande para guardar su presupuesto
+      const captureBtn = document.getElementById('btnCapture');
+      if (captureBtn) {
+        captureBtn.classList.add('btn-capture-client');
+        captureBtn.innerHTML = '<svg class="icon"><use href="#i-download"></use></svg> Guardar mi presupuesto';
+      }
     }
 
     function initFromUrl() {
