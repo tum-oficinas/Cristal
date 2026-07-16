@@ -132,7 +132,7 @@
 
     /* ── Input dimensión (unificado, con sufijo m² integrado) ── */
     .dim-input-wrap { position: relative; }
-    .dim-input-wrap input[type="number"] {
+    .dim-input-wrap input {
       width: 100%;
       height: 50px;
       border: 1.5px solid var(--border-strong);
@@ -145,14 +145,14 @@
       outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
-    .dim-input-wrap input[type="number"]:focus {
+    .dim-input-wrap input:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(201,255,77,0.15);
       background: var(--surface);
     }
-    .dim-input-wrap input[type="number"]::placeholder { color: var(--text-muted); font-weight: 600; }
-    .dim-input-wrap input[type="number"]::-webkit-inner-spin-button,
-    .dim-input-wrap input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    .dim-input-wrap input::placeholder { color: var(--text-muted); font-weight: 600; }
+    .dim-input-wrap input::-webkit-inner-spin-button,
+    .dim-input-wrap input::-webkit-outer-spin-button { -webkit-appearance: none; }
     .dim-unit {
       position: absolute;
       right: 16px;
@@ -360,6 +360,7 @@
       align-items: center;
       text-align: center;
       user-select: none;
+      min-width: 0;
     }
     .plan-card:hover { border-color: var(--border-strong); }
     .plan-card:active { transform: scale(0.97); }
@@ -972,7 +973,7 @@
       <div class="measures-list" id="measuresList">
         <div class="measure-row" data-row-id="1">
           <div class="dim-input-wrap">
-            <input type="number" class="measure-input" placeholder="0" min="0" step="any" inputmode="decimal" />
+            <input type="text" class="measure-input" placeholder="0" inputmode="decimal" />
             <span class="dim-unit">m²</span>
           </div>
           <button type="button" class="measure-remove" onclick="removeMeasure(this)" aria-label="Quitar medida">
@@ -1162,8 +1163,30 @@
     const segBoth  = document.getElementById('segBoth');
 
     measuresList.addEventListener('input', (e) => {
-      if (e.target.classList.contains('measure-input')) recalcMeasures();
+      if (e.target.classList.contains('measure-input')) {
+        sanitizeMeasureInput(e.target);
+        recalcMeasures();
+      }
     });
+
+    // Normaliza lo que el usuario escribe en un campo de medida: acepta
+    // coma o punto como separador decimal (teclados en español suelen
+    // insertar coma) y descarta cualquier otro caracter no numérico,
+    // sin alterar la lógica de cálculo ni de redondeo existente.
+    function sanitizeMeasureInput(input) {
+      const cursorFromEnd = input.value.length - (input.selectionEnd ?? input.value.length);
+      let v = input.value.replace(',', '.');
+      v = v.replace(/[^0-9.]/g, '');
+      const firstDot = v.indexOf('.');
+      if (firstDot !== -1) {
+        v = v.slice(0, firstDot + 1) + v.slice(firstDot + 1).replace(/\./g, '');
+      }
+      if (v !== input.value) {
+        input.value = v;
+        const pos = Math.max(0, v.length - cursorFromEnd);
+        try { input.setSelectionRange(pos, pos); } catch (e) {}
+      }
+    }
 
     function createMeasureRow(value) {
       const row = document.createElement('div');
@@ -1173,11 +1196,9 @@
       wrap.className = 'dim-input-wrap';
 
       const input = document.createElement('input');
-      input.type = 'number';
+      input.type = 'text';
       input.className = 'measure-input';
       input.placeholder = '0';
-      input.min = '0';
-      input.step = 'any';
       input.inputMode = 'decimal';
       if (value !== null && value !== undefined && value !== '') {
         const n = parseFloat(value);
