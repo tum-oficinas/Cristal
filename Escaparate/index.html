@@ -102,14 +102,14 @@
     .dim-input-wrap { position: relative; }
     .dim-input-wrap input[type="number"] {
       width: 100%;
-      height: 58px;
+      height: 50px;
       border: 1.5px solid var(--border-strong);
       border-radius: 12px;
       background: var(--surface-2);
       color: var(--text-primary);
-      font-size: 24px;
-      font-weight: 700;
-      padding: 0 52px 0 16px;
+      font-size: 17px;
+      font-weight: 600;
+      padding: 0 48px 0 14px;
       outline: none;
       transition: border-color 0.15s, box-shadow 0.15s;
     }
@@ -130,37 +130,6 @@
       font-weight: 700;
       color: var(--text-muted);
       pointer-events: none;
-    }
-
-    /* ── Chips de tamaños rápidos ── */
-    .chip-row {
-      display: flex;
-      gap: 7px;
-      margin-top: 10px;
-      overflow-x: auto;
-      padding-bottom: 2px;
-      scrollbar-width: none;
-    }
-    .chip-row::-webkit-scrollbar { display: none; }
-    .chip {
-      flex: none;
-      padding: 8px 14px;
-      border-radius: 999px;
-      border: 1.5px solid var(--border-strong);
-      background: var(--surface);
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      cursor: pointer;
-      white-space: nowrap;
-      transition: background 0.12s, border-color 0.12s, color 0.12s, transform 0.1s;
-      -webkit-tap-highlight-color: transparent;
-    }
-    .chip:active { transform: scale(0.95); }
-    .chip.active {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: var(--accent-ink);
     }
 
     /* ── Selector de caras (segmentado, más rápido que un switch) ── */
@@ -215,6 +184,120 @@
     }
     .dim-effective-hint.visible { display: flex; }
     .dim-effective-hint svg { width: 14px; height: 14px; }
+
+    /* ── Medidas adicionales (se suman automáticamente) ── */
+    .measures-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .measure-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .measure-row .dim-input-wrap { flex: 1; }
+    .measure-remove {
+      flex: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      border: 1.5px solid #fecaca;
+      background: #fef2f2;
+      color: #ef4444;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s, color 0.12s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .measure-remove svg { width: 17px; height: 17px; }
+    .measure-remove:hover { border-color: #ef4444; color: #fff; background: #ef4444; }
+    .measure-remove:active { transform: scale(0.94); }
+
+    .add-measure-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: 100%;
+      margin-top: 10px;
+      padding: 11px;
+      border-radius: 10px;
+      border: 1.5px dashed var(--border-strong);
+      background: transparent;
+      color: var(--accent-text);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.12s, border-color 0.12s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .add-measure-btn svg { width: 15px; height: 15px; }
+    .add-measure-btn:hover { background: var(--accent-bg); border-color: var(--accent); }
+    .add-measure-btn:active { transform: scale(0.98); }
+
+    .measures-total {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px 16px;
+      margin-top: 10px;
+      padding: 14px 16px;
+      background: var(--accent-bg);
+      border: 1.5px solid var(--accent);
+      border-radius: 12px;
+    }
+    .measures-total.visible { display: flex; }
+    .measures-total-main { flex: none; }
+    .measures-total-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--accent-text);
+      margin-bottom: 4px;
+    }
+    .measures-total-label svg { width: 13px; height: 13px; }
+    .measures-total-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+    .measures-total-detail {
+      flex: 1;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 6px;
+      min-width: 0;
+    }
+    .measure-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.65);
+      border: 1px solid rgba(0,153,79,0.25);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-text);
+      white-space: nowrap;
+    }
+    .measure-tag-plus {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent-text);
+      opacity: 0.6;
+    }
 
     /* ── Plans grid ── */
     .section-title {
@@ -283,13 +366,29 @@
     .plan-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
     .plan-factor { font-size: 11px; color: var(--text-muted); margin-top: 2px; margin-bottom: 8px; }
     .plan-price {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-muted);
+      align-self: stretch;
+      font-size: 21px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--text-primary);
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 5px 8px;
+      margin-top: 8px;
       min-height: 22px;
-      transition: color 0.15s;
+      transition: color 0.15s, background 0.15s, border-color 0.15s;
     }
-    .plan-price.active { color: var(--accent-text); }
+    .plan-price.active {
+      color: var(--accent-text);
+      background: var(--accent-bg);
+      border-color: var(--accent);
+    }
+    .plan-card.selected .plan-price.active {
+      color: var(--accent-ink);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
 
     .check-dot {
       position: absolute;
@@ -388,7 +487,15 @@
       border-top: 0.5px solid var(--border);
     }
     .result-total-row .tl { font-size: 14px; font-weight: 500; color: var(--text-secondary); }
-    .result-total-row .tv { font-size: 26px; font-weight: 700; color: var(--accent-text); }
+    .result-total-row .tv {
+      font-size: 22px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      color: var(--accent-ink);
+      background: var(--accent);
+      padding: 8px 18px;
+      border-radius: 10px;
+    }
 
     /* ── Bloque de contacto de la empresa (queda en capturas de pantalla) ── */
     .result-contact {
@@ -487,7 +594,7 @@
       .plans-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
       .plan-card { padding: 0.75rem 0.5rem; }
       .plan-name { font-size: 11px; }
-      .plan-price { font-size: 13px; }
+      .plan-price { font-size: 16px; padding: 4px 4px; }
       .actions { flex-wrap: wrap; }
     }
     /* ── Botón compartir (3 acciones) ── */
@@ -657,6 +764,16 @@
       <symbol id="i-check" viewBox="0 0 24 24">
         <polyline points="4 12 9 17 20 6"/>
       </symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24">
+        <line x1="12" y1="5" x2="12" y2="19"/>
+        <line x1="5" y1="12" x2="19" y2="12"/>
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <polyline points="3 6 5 6 21 6"/>
+        <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+        <path d="M10 11v6M14 11v6"/>
+        <path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+      </symbol>
       <symbol id="i-seedling" viewBox="0 0 24 24">
         <path d="M12 21v-8"/>
         <path d="M12 13c0-4-3-7-7-7 0 4 3 7 7 7z"/>
@@ -783,18 +900,30 @@
       <div class="field-label">
         <svg class="icon"><use href="#i-ruler"></use></svg> Dimensión del área
       </div>
-      <div class="dim-input-wrap">
-        <input type="number" id="dimInput" placeholder="0" min="0" step="any" inputmode="decimal" />
-        <span class="dim-unit">m²</span>
+      <div class="measures-list" id="measuresList">
+        <div class="measure-row" data-row-id="1">
+          <div class="dim-input-wrap">
+            <input type="number" class="measure-input" placeholder="0" min="0" step="any" inputmode="decimal" />
+            <span class="dim-unit">m²</span>
+          </div>
+          <button type="button" class="measure-remove" onclick="removeMeasure(this)" aria-label="Quitar medida">
+            <svg class="icon"><use href="#i-trash"></use></svg>
+          </button>
+        </div>
       </div>
 
-      <div class="chip-row" id="chipRow">
-        <button type="button" class="chip" data-val="3">3 m²</button>
-        <button type="button" class="chip" data-val="5">5 m²</button>
-        <button type="button" class="chip" data-val="7">7 m²</button>
-        <button type="button" class="chip" data-val="9">9 m²</button>
-        <button type="button" class="chip" data-val="10">10 m²</button>
-        <button type="button" class="chip" data-val="15">15 m²</button>
+      <button type="button" class="add-measure-btn" onclick="addMeasure()">
+        <svg class="icon"><use href="#i-plus"></use></svg> Agregar medida adicional
+      </button>
+
+      <div class="measures-total" id="measuresBreakdown">
+        <div class="measures-total-main">
+          <div class="measures-total-label">
+            <svg class="icon"><use href="#i-calculator"></use></svg> Suma total
+          </div>
+          <div class="measures-total-value" id="measuresTotalValue">— m²</div>
+        </div>
+        <div class="measures-total-detail" id="measuresTotalDetail"></div>
       </div>
 
       <div class="sides-segment" role="group" aria-label="Caras del cristal">
@@ -849,7 +978,7 @@
         <div class="result-head-left">
           <svg class="icon"><use href="#i-file-invoice"></use></svg>
           <div>
-            <div class="result-head-title">Cotización TUM CRISTAL</div>
+            <div class="result-head-title">Cotización</div>
           </div>
         </div>
         <div class="result-badge" id="resBadge">—</div>
@@ -956,34 +1085,102 @@
     let bothSides = false;
     let isClientView = false;
 
-    const dimInput = document.getElementById('dimInput');
-    const chipRow  = document.getElementById('chipRow');
+    const measuresList = document.getElementById('measuresList');
     const segOne   = document.getElementById('segOne');
     const segBoth  = document.getElementById('segBoth');
 
-    dimInput.addEventListener('input', () => {
-      dimension = parseFloat(dimInput.value) || 0;
-      updateChipActive();
-      updateEffectiveHint();
-      updatePrices();
-      updateResult();
+    measuresList.addEventListener('input', (e) => {
+      if (e.target.classList.contains('measure-input')) recalcMeasures();
     });
 
-    chipRow.addEventListener('click', (e) => {
-      const chip = e.target.closest('.chip');
-      if (!chip) return;
-      dimInput.value = chip.dataset.val;
-      dimension = parseFloat(chip.dataset.val) || 0;
-      updateChipActive();
-      updateEffectiveHint();
-      updatePrices();
-      updateResult();
-    });
+    function createMeasureRow(value) {
+      const row = document.createElement('div');
+      row.className = 'measure-row';
 
-    function updateChipActive() {
-      document.querySelectorAll('.chip').forEach(c => {
-        c.classList.toggle('active', parseFloat(c.dataset.val) === dimension);
+      const wrap = document.createElement('div');
+      wrap.className = 'dim-input-wrap';
+
+      const input = document.createElement('input');
+      input.type = 'number';
+      input.className = 'measure-input';
+      input.placeholder = '0';
+      input.min = '0';
+      input.step = 'any';
+      input.inputMode = 'decimal';
+      if (value !== null && value !== undefined && value !== '') {
+        const n = parseFloat(value);
+        if (!isNaN(n)) input.value = n;
+      }
+
+      const unit = document.createElement('span');
+      unit.className = 'dim-unit';
+      unit.textContent = 'm²';
+
+      wrap.appendChild(input);
+      wrap.appendChild(unit);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'measure-remove';
+      btn.setAttribute('aria-label', 'Quitar medida');
+      btn.setAttribute('onclick', 'removeMeasure(this)');
+      btn.innerHTML = '<svg class="icon"><use href="#i-trash"></use></svg>';
+
+      row.appendChild(wrap);
+      row.appendChild(btn);
+      return row;
+    }
+
+    function addMeasure() {
+      const row = createMeasureRow(null);
+      measuresList.appendChild(row);
+      updateRemoveButtons();
+      row.querySelector('.measure-input').focus();
+      recalcMeasures();
+    }
+
+    function removeMeasure(btn) {
+      if (measuresList.querySelectorAll('.measure-row').length <= 1) return;
+      btn.closest('.measure-row').remove();
+      updateRemoveButtons();
+      recalcMeasures();
+    }
+
+    function updateRemoveButtons() {
+      const rows = measuresList.querySelectorAll('.measure-row');
+      rows.forEach(row => {
+        row.querySelector('.measure-remove').style.display = rows.length > 1 ? 'flex' : 'none';
       });
+    }
+
+    function getMeasureValues() {
+      return Array.from(measuresList.querySelectorAll('.measure-input'))
+        .map(inp => parseFloat(inp.value))
+        .filter(v => !isNaN(v) && v > 0);
+    }
+
+    function recalcMeasures() {
+      const values = getMeasureValues();
+      dimension = Math.round(values.reduce((a, b) => a + b, 0) * 10000) / 10000;
+
+      const breakdown = document.getElementById('measuresBreakdown');
+      const totalValue = document.getElementById('measuresTotalValue');
+      const totalDetail = document.getElementById('measuresTotalDetail');
+      if (values.length > 1) {
+        totalValue.textContent = dimension.toLocaleString('es-BO', { maximumFractionDigits: 4 }) + ' m²';
+        totalDetail.innerHTML = values
+          .map(v => '<span class="measure-tag">' + v.toLocaleString('es-BO', { maximumFractionDigits: 4 }) + ' m²</span>')
+          .join('<span class="measure-tag-plus">+</span>');
+        breakdown.classList.add('visible');
+      } else {
+        breakdown.classList.remove('visible');
+        totalValue.textContent = '— m²';
+        totalDetail.textContent = '';
+      }
+
+      updateEffectiveHint();
+      updatePrices();
+      updateResult();
     }
 
     function setBothSides(val) {
@@ -1001,7 +1198,7 @@
     }
 
     function fmt(n) {
-      return 'Bs. ' + n.toLocaleString('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+      return 'Bs. ' + Math.round(n).toLocaleString('es-BO', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
     }
 
     function updateEffectiveHint() {
@@ -1116,11 +1313,15 @@
     }
 
     function limpiar() {
-      dimInput.value = '';
+      measuresList.innerHTML = '';
+      measuresList.appendChild(createMeasureRow(null));
+      updateRemoveButtons();
       dimension = 0;
+      document.getElementById('measuresBreakdown').classList.remove('visible');
+      document.getElementById('measuresTotalValue').textContent = '— m²';
+      document.getElementById('measuresTotalDetail').textContent = '';
       bothSides = false;
       setBothSides(false);
-      updateChipActive();
       selectedPlan = null;
       document.querySelectorAll('.plan-card').forEach(c => c.classList.remove('selected'));
       updateEffectiveHint();
@@ -1235,11 +1436,12 @@
     function activarVistaCliente(data) {
       isClientView = true;
 
-      dimInput.value = data.d;
+      measuresList.innerHTML = '';
+      measuresList.appendChild(createMeasureRow(data.d));
+      updateRemoveButtons();
       dimension = parseFloat(data.d) || 0;
       bothSides = !!data.b;
       setBothSides(bothSides);
-      updateChipActive();
 
       updateEffectiveHint();
       updatePrices();
