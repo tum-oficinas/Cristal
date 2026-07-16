@@ -205,7 +205,7 @@
       border: 1.5px solid #fecaca;
       background: #fef2f2;
       color: #ef4444;
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
@@ -1140,7 +1140,14 @@
     }
 
     function removeMeasure(btn) {
-      if (measuresList.querySelectorAll('.measure-row').length <= 1) return;
+      const rows = measuresList.querySelectorAll('.measure-row');
+      if (rows.length <= 1) {
+        const input = btn.closest('.measure-row').querySelector('.measure-input');
+        input.value = '';
+        input.focus();
+        recalcMeasures();
+        return;
+      }
       btn.closest('.measure-row').remove();
       updateRemoveButtons();
       recalcMeasures();
@@ -1149,7 +1156,7 @@
     function updateRemoveButtons() {
       const rows = measuresList.querySelectorAll('.measure-row');
       rows.forEach(row => {
-        row.querySelector('.measure-remove').style.display = rows.length > 1 ? 'flex' : 'none';
+        row.querySelector('.measure-remove').style.display = 'flex';
       });
     }
 
