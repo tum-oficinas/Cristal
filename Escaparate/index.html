@@ -1397,13 +1397,42 @@
       if (btn) btn.disabled = true;
       showToast('Generando imagen…');
 
-      const target = document.getElementById('resultCard');
+      const bg = getComputedStyle(document.body).backgroundColor || '#f4f5f7';
+      let target = document.getElementById('resultCard');
+      let cloneEl = null;
+
+      if (isClientView) {
+        // Para el cliente armamos la composición completa: logo + saludo + cotización
+        const wrap = document.querySelector('.wrap');
+        cloneEl = document.createElement('div');
+        cloneEl.style.cssText =
+          'position:fixed;top:-9999px;left:0;width:' + Math.round(wrap.getBoundingClientRect().width) + 'px;' +
+          'background:' + bg + ';padding:30px 22px 34px;border-radius:20px;';
+
+        const headerClone = document.querySelector('.header').cloneNode(true);
+        cloneEl.appendChild(headerClone);
+
+        const banner = document.getElementById('clientBanner');
+        if (banner) {
+          const bannerClone = banner.cloneNode(true);
+          bannerClone.style.display = 'flex';
+          cloneEl.appendChild(bannerClone);
+        }
+
+        const resultClone = document.getElementById('resultCard').cloneNode(true);
+        resultClone.style.marginBottom = '0';
+        cloneEl.appendChild(resultClone);
+
+        document.body.appendChild(cloneEl);
+        target = cloneEl;
+      }
 
       html2canvas(target, {
-        backgroundColor: '#ffffff',
+        backgroundColor: cloneEl ? null : bg,
         scale: 2,
         useCORS: true
       }).then(canvas => {
+        if (cloneEl) cloneEl.remove();
         canvas.toBlob(async (blob) => {
           if (btn) btn.disabled = false;
           if (!blob) { showToast('No se pudo generar la imagen'); return; }
@@ -1431,6 +1460,7 @@
           showToast('Imagen guardada');
         }, 'image/png');
       }).catch(() => {
+        if (cloneEl) cloneEl.remove();
         if (btn) btn.disabled = false;
         showToast('No se pudo generar la captura');
       });
